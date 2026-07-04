@@ -2,5 +2,6 @@ public/.DS_Store
 tsconfig.tsbuildinfo
 node_modules/
 .next/
+.next-dev/
 out/
 .vercel/
