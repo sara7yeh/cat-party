@@ -2,11 +2,11 @@
   "name": "猫咪派对 · 一台手机随时开喵",
   "short_name": "猫咪派对",
   "description": "软乎乎的多人聚会游戏合集",
-  "start_url": "/",
+  "start_url": "./",
   "display": "standalone",
   "background_color": "#fffaf7",
   "theme_color": "#fffaf7",
   "icons": [
-    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+    { "src": "./icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
   ]
 }

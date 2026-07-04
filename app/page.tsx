@@ -30,7 +30,7 @@ function Cat({mood="happy",className=""}:{mood?:"happy"|"wink"|"party"|"sleep";c
 export default function App(){
   const[tab,setTab]=useState<Tab>("home"),[detail,setDetail]=useState<Game|null>(null),[play,setPlay]=useState<Game|null>(null),[tool,setTool]=useState<string|null>(null);
   const[players,setPlayers]=useStored("party_players",DEFAULT_PLAYERS);const[favorites,setFavorites]=useStored<string[]>("party_favorites",[]);const[recent,setRecent]=useStored<string[]>("party_recent",[]);const[level,setLevel]=useStored<Level>("party_level","轻松");
-  useEffect(()=>{if("serviceWorker"in navigator)navigator.serviceWorker.register("/sw.js").catch(()=>{})},[]);
+  useEffect(()=>{if("serviceWorker"in navigator)navigator.serviceWorker.register(`${process.env.NEXT_PUBLIC_BASE_PATH||""}/sw.js`).catch(()=>{})},[]);
   const open=(g:Game)=>{setDetail(g);setRecent(r=>[g.id,...r.filter(x=>x!==g.id)].slice(0,8))};const start=(g:Game)=>{setDetail(null);setPlay(g);setRecent(r=>[g.id,...r.filter(x=>x!==g.id)].slice(0,8))};
   return <main><div className="ambient a1"/><div className="ambient a2"/><div className="paw-pattern"/><div className="app-shell">
     <header className="topbar"><button className="brand" onClick={()=>setTab("home")}><span className="brand-mark cat-logo"><i>•ᴗ•</i></span><span>猫咪派对<small>和好朋友，喵一晚</small></span></button><button className="avatar cat-avatar" onClick={()=>setTab("mine")}>ฅ</button></header>
