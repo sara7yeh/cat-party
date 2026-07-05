@@ -5,6 +5,7 @@ import { ArrowLeft, Bookmark, Check, ChevronRight, Clock3, Dices, Heart, History
 import { charadePacks, Game, games, Level, prompts, punishments, rewards } from "./cat-data";
 import { truthQuestionSeeds } from "./truth-data";
 import Undercover from "./undercover";
+import { primeCountdownAudio, useAcceleratingCountdown } from "./countdown-audio";
 
 type Tab = "home" | "games" | "tools" | "mine";
 const DEFAULT_PLAYERS = ["小明", "小红", "阿杰", "圆圆"];
@@ -80,8 +81,9 @@ function Charades({onClose}:{onClose:()=>void}){
   const saveCustom=()=>{const next=parseWords(draft);if(next.length){setCustom(next);setPack("custom");setDraft("")}};
   const requestLandscape=async()=>{try{await document.documentElement.requestFullscreen?.();const orientation=screen.orientation as ScreenOrientation&{lock?:(mode:string)=>Promise<void>};await orientation.lock?.("landscape")}catch{}}
   const finishRound=()=>{setPlaying(false);setFinished(true)};
+  useAcceleratingCountdown(playing&&!confirmExit,remaining,10);
   useEffect(()=>{if(!playing||confirmExit)return;const timer=window.setInterval(()=>setRemaining(value=>{if(value<=1){window.clearInterval(timer);setTimeout(finishRound,0);return 0}return value-1}),1000);return()=>window.clearInterval(timer)},[playing,confirmExit]);
-  const start=async()=>{const source=pack==="custom"?custom:selected?.words||[];if(!source.length)return;if(selected?.adult&&!confirmAdult){setConfirmAdult(true);return}setWords([...source].sort(()=>Math.random()-.5));setIndex(0);setCorrect(0);setSkipped(0);setSeen(0);setRemaining(duration);setFinished(false);setPlaying(true);await requestLandscape()};
+  const start=async()=>{const source=pack==="custom"?custom:selected?.words||[];if(!source.length)return;if(selected?.adult&&!confirmAdult){setConfirmAdult(true);return}primeCountdownAudio();setWords([...source].sort(()=>Math.random()-.5));setIndex(0);setCorrect(0);setSkipped(0);setSeen(0);setRemaining(duration);setFinished(false);setPlaying(true);await requestLandscape()};
   const answer=(right:boolean)=>{if(right)setCorrect(x=>x+1);else setSkipped(x=>x+1);setSeen(x=>x+1);if(index>=words.length-1){setWords(current=>[...current].sort(()=>Math.random()-.5));setIndex(0)}else setIndex(x=>x+1)};
   const exit=()=>{try{if(document.fullscreenElement)document.exitFullscreen()}catch{}onClose()};
   if(finished)return <div className="fullscreen charades-finish"><button className="charades-close" onClick={exit}><X/></button><Cat mood="party"/><span>{duration} 秒回合完成</span><h1>{correct} 题猜对！</h1><div><b>{seen}</b><small>已挑战</small><b>{skipped}</b><small>跳过</small></div><button className="primary big" onClick={start}><RotateCcw/>再来一局</button><button className="text-btn" onClick={()=>setFinished(false)}>更换题库或时间</button></div>;
