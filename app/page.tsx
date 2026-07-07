@@ -79,7 +79,65 @@ function ListSection({title,icon,ids,empty,open}:{title:string;icon:React.ReactN
 
 function Detail({game,favorite,onFav,onClose,onStart}:{game:Game;favorite:boolean;onFav:()=>void;onClose:()=>void;onStart:()=>void}){return <div className="sheet-overlay"><article className="detail-sheet"><div className={`detail-hero ${game.color}`}><div className="sheet-actions"><button onClick={onClose}><ArrowLeft/></button><button className={favorite?"fav on":"fav"} onClick={onFav}><Bookmark fill={favorite?"currentColor":"none"}/></button></div><GameCatIcon game={game} className="detail-cat-icon"/><span className="category">{game.category}</span><h1>{game.name}</h1><p>{game.tagline}</p><div className="detail-meta"><span><Users/>{game.min}–{game.max} 人</span><span><Clock3/>{gameTime(game)} 分钟</span><span><Zap/>{game.difficulty}</span></div></div><div className="detail-body"><section><h3>需要准备</h3><div className="requirement-row">{game.requirements.map(x=><span key={x}>🐾 {x}</span>)}</div></section><section><h3>怎么玩</h3><ol>{game.rules.map((r,i)=><li key={r}><span>{i+1}</span><p>{r}</p></li>)}</ol></section><section className="example"><b>举个例子</b><p>{game.example}</p></section><section><h3>胜利条件</h3><p>{game.victory}</p></section>{game.tip&&<section className="tip"><span>🐱</span><div><b>猫猫小贴士</b><p>{game.tip}</p></div></section>}</div><div className="sticky-action"><button className="primary full" onClick={onStart}>{game.tool?"马上开喵":"开始游戏"}<ChevronRight/></button></div></article></div>}
 
-function Play({game,players,level,punishmentPlayers,punishmentSource,onClose,onSwitch,onReturnSource}:{game:Game;players:string[];level:Level;punishmentPlayers:string[];punishmentSource:PunishmentSource|null;onClose:()=>void;onSwitch:(id:string,names?:string[],source?:PunishmentSource|null)=>void;onReturnSource:()=>void}){if(game.id==="charades")return <Charades onClose={onClose}/>;if(game.id==="seven")return <SevenGame onClose={onClose}/>;if(game.id==="miss")return <MissCardRules players={players} onClose={onClose}/>;if(game.id==="truth")return <TruthOrDare players={players} punishmentPlayers={punishmentPlayers} punishmentSource={punishmentSource} onClose={onClose} onReturnSource={onReturnSource}/>;if(game.id==="undercover")return <Undercover initialPlayers={players} onClose={onClose} onTruthOrDare={names=>onSwitch("truth",names,"undercover")}/>;if(game.id==="catbomb")return <CatBomb initialPlayers={players} onClose={onClose} onTruthOrDare={name=>onSwitch("truth",[name],"catbomb")}/>;if(game.tool==="identity")return <Identity game={game} players={players} onClose={onClose}/>;if(game.tool==="timer")return <TimerTool title={game.name} onClose={onClose}/>;return <Prompt game={game} players={players} level={level} onClose={onClose}/>}
+function Play({game,players,level,punishmentPlayers,punishmentSource,onClose,onSwitch,onReturnSource}:{game:Game;players:string[];level:Level;punishmentPlayers:string[];punishmentSource:PunishmentSource|null;onClose:()=>void;onSwitch:(id:string,names?:string[],source?:PunishmentSource|null)=>void;onReturnSource:()=>void}){if(game.id==="charades")return <Charades onClose={onClose}/>;if(game.id==="garden")return <GardenGame onClose={onClose}/>;if(game.id==="seven")return <SevenGame onClose={onClose}/>;if(game.id==="miss")return <MissCardRules players={players} onClose={onClose}/>;if(game.id==="truth")return <TruthOrDare players={players} punishmentPlayers={punishmentPlayers} punishmentSource={punishmentSource} onClose={onClose} onReturnSource={onReturnSource}/>;if(game.id==="undercover")return <Undercover initialPlayers={players} onClose={onClose} onTruthOrDare={names=>onSwitch("truth",names,"undercover")}/>;if(game.id==="catbomb")return <CatBomb initialPlayers={players} onClose={onClose} onTruthOrDare={name=>onSwitch("truth",[name],"catbomb")}/>;if(game.tool==="identity")return <Identity game={game} players={players} onClose={onClose}/>;if(game.tool==="timer")return <TimerTool title={game.name} onClose={onClose}/>;return <Prompt game={game} players={players} level={level} onClose={onClose}/>}
+type GardenGroup="常用"|"游戏/影视"|"品牌/消费"|"知识/固定集合"|"自定义";
+type GardenItem={id:string;name:string;desc:string;group:GardenGroup;custom?:boolean};
+const GARDEN_GROUPS:GardenGroup[]=["常用","游戏/影视","品牌/消费","知识/固定集合","自定义"];
+const GARDENS:GardenItem[]=[
+  {id:"gender",name:"性别园",desc:"说出描述性别的词",group:"常用"},
+  {id:"toilet",name:"厕所园",desc:"说出厕所里会出现的人、物或行为",group:"常用"},
+  {id:"traffic-light",name:"红绿灯园",desc:"说出交通灯相关词",group:"常用"},
+  {id:"seasons",name:"四季园",desc:"春夏秋冬",group:"常用"},
+  {id:"valorant",name:"无畏契约园",desc:"说出角色、装备、地图、技能或玩家常用词",group:"游戏/影视"},
+  {id:"honor",name:"王者荣耀园",desc:"说出角色、装备、地图、技能或玩家常用词",group:"游戏/影视"},
+  {id:"lol",name:"英雄联盟园",desc:"说出角色、装备、地图、技能或玩家常用词",group:"游戏/影视"},
+  {id:"zhenhuan",name:"甄嬛传园",desc:"说出角色、台词、地点或名场面",group:"游戏/影视"},
+  {id:"ipartment",name:"爱情公寓园",desc:"说出角色、台词、地点或名场面",group:"游戏/影视"},
+  {id:"teens",name:"时代少年团园",desc:"说出成员、歌曲",group:"游戏/影视"},
+  {id:"rapper",name:"说唱歌手园",desc:"说出说唱歌手",group:"游戏/影视"},
+  {id:"lipstick",name:"口红园",desc:"说出相关品牌、品类",group:"品牌/消费"},
+  {id:"cosmetics",name:"化妆品园",desc:"说出相关品牌、品类",group:"品牌/消费"},
+  {id:"pad",name:"卫生巾园",desc:"说出相关品牌、品类",group:"品牌/消费"},
+  {id:"car",name:"汽车园",desc:"说出汽车品牌、车型或零件",group:"品牌/消费"},
+  {id:"beer",name:"啤酒园",desc:"说出酒类品牌、品类",group:"品牌/消费"},
+  {id:"spirit",name:"洋酒园",desc:"说出酒类品牌、品类",group:"品牌/消费"},
+  {id:"milk-tea",name:"奶茶园",desc:"说出品牌、口味或单品",group:"品牌/消费"},
+  {id:"fried-chicken",name:"炸鸡园",desc:"说出品牌、口味或单品",group:"品牌/消费"},
+  {id:"hotel",name:"酒店园",desc:"说出酒店里的人、物、服务或场景",group:"品牌/消费"},
+  {id:"phone-brand",name:"手机品牌园",desc:"说出相关品牌名",group:"品牌/消费"},
+  {id:"luxury",name:"奢侈品品牌园",desc:"说出相关品牌名",group:"品牌/消费"},
+  {id:"inventions",name:"四大发明园",desc:"说出四大发明",group:"知识/固定集合"},
+  {id:"zodiac",name:"星座园",desc:"说出对应名称",group:"知识/固定集合"},
+  {id:"solar-term",name:"节气园",desc:"说出对应名称",group:"知识/固定集合"},
+  {id:"shengxiao",name:"生肖园",desc:"说出对应名称",group:"知识/固定集合"},
+  {id:"collapsed-celeb",name:"塌房艺人园",desc:"说出符合主题的公众人物",group:"知识/固定集合"},
+  {id:"divorced-celeb",name:"离婚艺人园",desc:"说出符合主题的公众人物",group:"知识/固定集合"},
+  {id:"weekday",name:"星期园",desc:"说出对应固定相关内容",group:"知识/固定集合"},
+  {id:"continent",name:"七大洲园",desc:"说出对应固定相关内容",group:"知识/固定集合"},
+  {id:"classic-novels",name:"四大名著园",desc:"说出对应固定相关内容",group:"知识/固定集合"},
+  {id:"periodic-table",name:"元素周期表园",desc:"说出元素、数字或相关知识点",group:"知识/固定集合"},
+  {id:"pi",name:"圆周率园",desc:"说出元素、数字或相关知识点",group:"知识/固定集合"},
+  {id:"english-a",name:"A开头英语单词园",desc:"说出对应字母开头的英文单词",group:"知识/固定集合"},
+  {id:"english-x",name:"X开头英语单词园",desc:"说出对应字母开头的英文单词",group:"知识/固定集合"}
+];
+function GardenGame({onClose}:{onClose:()=>void}){
+  const[custom,setCustom]=useStored<GardenItem[]>("party_custom_gardens_v1",[]);
+  const[name,setName]=useState(""),[desc,setDesc]=useState(""),[picked,setPicked]=useState<GardenItem|null>(GARDENS[0]);
+  const customGardens=custom.map(item=>({...item,group:"自定义" as GardenGroup,custom:true}));
+  const allGardens=useMemo(()=>[...GARDENS,...customGardens],[customGardens]);
+  const choose=(item:GardenItem)=>setPicked(item);
+  const random=()=>{if(!allGardens.length)return;setPicked(allGardens[Math.floor(Math.random()*allGardens.length)])};
+  const addCustom=()=>{const cleanName=name.trim(),cleanDesc=desc.trim();if(!cleanName)return;const item:GardenItem={id:`custom-${Date.now()}`,name:cleanName,desc:cleanDesc||"按现场约定的类别快速回答",group:"自定义",custom:true};setCustom(list=>[item,...list].slice(0,40));setPicked(item);setName("");setDesc("")};
+  const removeCustom=(id:string)=>{setCustom(list=>list.filter(item=>item.id!==id));if(picked?.id===id)setPicked(GARDENS[0])};
+  return <div className="fullscreen garden-screen"><Head onClose={onClose} title="🌳 逛三园"/><div className="garden-shell">
+    <section className="garden-hero"><GameCatIcon game={games.find(g=>g.id==="garden")!} className="garden-hero-icon"/><div><span>小猫主持 · 不露答案版</span><h1>本轮逛：{picked?.name||"还没选园"}</h1><p>{picked?.desc||"从推荐园里选一个，或者让小猫随机抽一个。"}</p></div></section>
+    <section className="garden-rules"><b>怎么玩</b><ol><li>选一个园作为本轮类别。</li><li>玩家依次说出不重复、符合类别的答案。</li><li>停顿、重复、答错的人接受约定小挑战。</li></ol><button className="primary" onClick={random}><Shuffle/>让小猫抽一个园</button></section>
+    <section className="garden-picker"><div className="garden-section-head"><div><span>推荐逛什么园</span><h2>只看主题，不看答案</h2></div><button onClick={random}><Sparkles/>随机</button></div>{GARDEN_GROUPS.filter(group=>group!=="自定义").map((group,i)=>{const items=GARDENS.filter(item=>item.group===group);return <details className="garden-group" key={group} open={i===0}><summary><b>{group}</b><small>{items.length} 个园</small></summary><div className="garden-grid">{items.map(item=><GardenCard key={item.id} item={item} active={picked?.id===item.id} onChoose={()=>choose(item)}/>)}</div></details>})}</section>
+    <section className="garden-custom"><div><span>自定义园</span><h2>把现场梗加进来</h2></div><div className="garden-custom-form"><input value={name} onChange={e=>setName(e.target.value)} placeholder="园名，例如：宿舍园"/><input value={desc} onChange={e=>setDesc(e.target.value)} onKeyDown={e=>e.key==="Enter"&&addCustom()} placeholder="简短说明，例如：说出宿舍里会出现的东西"/><button className="primary" disabled={!name.trim()} onClick={addCustom}><Plus/>加入</button></div>{customGardens.length>0&&<details className="garden-group custom" open><summary><b>自定义</b><small>{customGardens.length} 个园</small></summary><div className="garden-custom-list">{customGardens.map(item=><div key={item.id} className={picked?.id===item.id?"active":""}><button onClick={()=>choose(item)}><b>{item.name}</b><small>{item.desc}</small></button><button aria-label={`删除${item.name}`} onClick={()=>removeCustom(item.id)}><X/></button></div>)}</div></details>}</section>
+    <button className="garden-end" onClick={onClose}>结束逛三园</button>
+  </div></div>
+}
+function GardenCard({item,active,onChoose}:{item:GardenItem;active:boolean;onChoose:()=>void}){return <button className={active?"garden-card active":"garden-card"} onClick={onChoose}><b>{item.name}</b><small>{item.desc}</small>{active&&<Check/>}</button>}
 type MissRank="A"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9"|"10"|"J"|"Q"|"K";
 type MissRule={id:string;name:string;short:string;details:string;example:string;helper?:"seven"};
 type MissConfig=Record<MissRank,string>;
