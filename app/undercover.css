@@ -14,7 +14,7 @@
 .uc-reveal-kicker{display:inline-block;border-radius:999px;background:#ffe1dc;color:#e76f5d;padding:8px 16px;font-size:13px;font-weight:900}
 .uc-reveal-pass>h1{font-size:46px;line-height:1.08;margin:38px 0 56px;color:#696468}
 .uc-undercover-icon{display:block;width:142px;height:142px;object-fit:contain;margin:0 auto 18px;filter:drop-shadow(0 7px 4px rgba(56,51,52,.22))}
-.uc-screen.uc-reveal-mode .uc-secret,.uc-screen.uc-reveal-mode .uc-role{min-height:320px;border:4px solid #6d696d;border-radius:28px;background:#837f81;box-shadow:0 10px 0 #b8eef4;color:#fff;padding:34px 24px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px}
+.uc-screen.uc-reveal-mode .uc-secret,.uc-screen.uc-reveal-mode .uc-role{width:100%;aspect-ratio:1/1;min-height:0;box-sizing:border-box;border:4px solid #6d696d;border-radius:28px;background:#837f81;box-shadow:0 10px 0 #b8eef4;color:#fff;padding:34px 24px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px}
 .uc-screen.uc-reveal-mode .uc-secret{border-style:solid}
 .uc-screen.uc-reveal-mode .uc-secret b,.uc-screen.uc-reveal-mode .uc-role h1{font-size:28px;color:#fff;margin:8px 0 4px}
 .uc-screen.uc-reveal-mode .uc-secret small,.uc-screen.uc-reveal-mode .uc-role p,.uc-screen.uc-reveal-mode .uc-role small{font-size:15px;color:#c7c2c4;opacity:1}
@@ -22,4 +22,4 @@
 .uc-screen.uc-reveal-mode .uc-main.primary{min-height:64px;margin-top:42px;border-radius:17px;background:#ff8e98;box-shadow:0 8px 0 #e87482;color:#fff;font-size:20px}
 .uc-screen.uc-reveal-mode .uc-main.primary:disabled{opacity:.55}
 @media(max-width:600px){.uc-cat-sprite{width:125px;height:125px}.uc-secret .uc-cat-sprite{width:145px;height:145px}.uc-result>.uc-cat-sprite,.uc-center>.uc-cat-sprite{width:155px;height:155px}}
-@media(max-width:600px){.uc-screen.uc-reveal-mode .play-head{height:86px;padding:0 16px 16px}.uc-screen.uc-reveal-mode .play-head button{width:48px;height:48px}.uc-screen.uc-reveal-mode .uc-shell{padding:86px 20px 34px}.uc-reveal-pass>h1{font-size:40px;margin:34px 0 50px}.uc-undercover-icon{width:132px;height:132px}.uc-screen.uc-reveal-mode .uc-secret,.uc-screen.uc-reveal-mode .uc-role{min-height:300px}.uc-screen.uc-reveal-mode .uc-main.primary{font-size:18px}}
+@media(max-width:600px){.uc-screen.uc-reveal-mode .play-head{height:86px;padding:0 16px 16px}.uc-screen.uc-reveal-mode .play-head button{width:48px;height:48px}.uc-screen.uc-reveal-mode .uc-shell{padding:86px 20px 34px}.uc-reveal-pass>h1{font-size:40px;margin:34px 0 50px}.uc-undercover-icon{width:132px;height:132px}.uc-screen.uc-reveal-mode .uc-main.primary{font-size:18px}}
